@@ -16,6 +16,7 @@ This is meant as a backend-only take home test project. You will not be scored o
 
 ## Time Constraints
 Do not spend more than 4 hours implementing the goals above. It's not mandatory that the goals above are 100% working, due to the time constraint, we're most interested in seeing your best work. Write this code as if you're contributing to a larger project with multiple developers who will critique your work. If you're running out of time and something isn't funcional yet, that's okay, make sure that whatever is functional is both complete and polished.
+If you’d like to build a more feature-rich application to better showcase your skills, feel free to spend more than 8 hours. This is entirely up to you and not a requirement. We’ve found that many candidates appreciate the opportunity to demonstrate their abilities in more depth.
 
 ## Setup
 The application is already scaffolded for you, you can start by running `docker-compose up`. This will start the database. The backend is in the `api` folder. Before running `npm start` or `npm start:dev` in the `api` folder you should run `npm run prisma:generate:client`, `npm run prisma:migrate:deploy`, and `npx prisma db seed` to seed the db with default data. First command will create all of the Prisma types for you, the second will create the database schema, and the third will seed the database with some initial data.
