@@ -11,6 +11,13 @@ export class UserService {
       where: {
         email: filter.email,
       },
+      include: {
+        userRole: {
+          select: {
+            role: true
+          }
+        }
+      }
     })
 
     return users
