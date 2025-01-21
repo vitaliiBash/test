@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -16,5 +16,37 @@ export class ClassroomService {
         });
 
         return cr;
+    }
+
+    public async getClassRooms() {
+        const crs = await this.prisma.classRoom.findMany();
+
+        return crs;
+    }
+
+    public async getClassRoom(id: number) {
+        const cr = await this.prisma.classRoom.findFirst({
+            where: {
+                id,
+            }
+        });
+
+        if (!cr) {
+            throw new NotFoundException(`Classroom ${id} not found`);
+        }
+
+        return cr;
+    }
+
+    public async deleteClassRoom(id: number) {
+        const cr = await this.prisma.classRoom.delete({
+            where: {
+                id,
+            }
+        });
+
+        if (!cr) {
+            throw new NotFoundException(`Classroom ${id} not found`);
+        }
     }
 };

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Delete, Body, UseGuards, Param } from '@nestjs/common'
 
 import { Serialize } from 'src/interceptors/serialize.interceptor'
 
@@ -26,5 +26,27 @@ export class ClassroomController {
     const data = await this.classroomService.createClassRoom(body);
 
     return { data };
+  }
+
+  @Get()
+  @Serialize(ClassroomDto)
+  async index() {
+    const data = await this.classroomService.getClassRooms();
+
+    return { data };
+  }
+
+  @Get(':id')
+  @Serialize(ClassroomDto)
+  async getClassRoom(@Param('id') id: string) {
+    const data = await this.classroomService.getClassRoom(Number(id));
+
+    return { data };
+  }
+
+  @Delete(':id')
+  @AllowedRoles([Roles.admin])
+  async deleteClassRoom(@Param('id') id: string) {
+    await this.classroomService.deleteClassRoom(Number(id));
   }
 }
