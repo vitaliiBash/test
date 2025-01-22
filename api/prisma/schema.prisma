@@ -47,3 +47,8 @@ model ClassRoom {
   address String?
 }
 
+model Subject {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+}
