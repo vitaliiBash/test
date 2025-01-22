@@ -10,6 +10,7 @@ import { AppService } from './app.service'
 import { UserModule } from './user/user.module'
 import { ClassroomModule } from './classroom/classroom.module'
 import { SubjectModule } from './subject/subject.module'
+import { SectionModule } from './section/section.module'
 import { PrismaModule } from './prisma/prisma.module'
 
 import { AuthGuard } from './common/guards/auth.guard'
@@ -19,6 +20,7 @@ import { AuthGuard } from './common/guards/auth.guard'
     UserModule,
     ClassroomModule,
     SubjectModule,
+    SectionModule,
     PrismaModule,
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env', `.env.${process.env.NODE_ENV}.local`, '.env.local'],
