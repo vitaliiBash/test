@@ -15,13 +15,18 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
 
     let status: HttpStatus;
 
-    switch (exception.code) {
+    switch (exception?.code) {
       case 'P2002':
         status = HttpStatus.CONFLICT;
+        message = 'Record already exist';
+        break;
+      case 'P2003':
+        status = HttpStatus.NOT_FOUND;
+        message = 'Related record not found';
         break;
       case 'P2025':
         status = HttpStatus.NOT_FOUND;
-        message = 'Record not found'
+        message = 'Record not found';
         break;
       default:
         status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -31,6 +36,19 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     response.status(status).json({
       statusCode: status,
       message,
-    })
+    });
+  }
+}
+
+@Catch(Prisma.PrismaClientUnknownRequestError)
+export class PrismaClientUnknowExceptionFilter extends BaseExceptionFilter {
+  catch(exception: Prisma.PrismaClientUnknownRequestError, host: ArgumentsHost): void {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+
+    response.status(500).json({
+      statusCode: 500,
+      message: exception.message,
+    });
   }
 }
