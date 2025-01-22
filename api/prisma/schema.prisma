@@ -49,9 +49,11 @@ model ClassRoom {
 }
 
 model Subject {
-  id          Int     @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   description String?
+
+  sections    Section[] @relation()
 }
 
 model Section {
@@ -60,7 +62,10 @@ model Section {
   subjectId   Int
 
   teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject     Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   schedule    SectionSchedule[] @relation()
+
+  @@unique([teacherId, subjectId])
 }
 
 enum Day {
