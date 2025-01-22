@@ -29,29 +29,19 @@ export class RolesGuard implements CanActivate {
             throw new UnauthorizedException(`Invalid user`);
         }
 
-        try {
-            const role = await this.prisma.userRole.findFirst({
-                where: {
-                    userId: req.user.id,
-                    role: {
-                        in: roles,
-                    }
+        const role = await this.prisma.userRole.findFirst({
+            where: {
+                userId: req.user.id,
+                role: {
+                    in: roles,
                 }
-            });
-
-            if (!role) {
-                throw new ForbiddenException(`User is not allowed to perform the action`);
             }
+        });
 
-            return true;
-        } catch {
-            throw new UnauthorizedException('Invalid token');
+        if (!role) {
+            throw new ForbiddenException(`User is not allowed to perform the action`);
         }
-    }
 
-    private extractTokenFromHeader(request: Request): string | undefined {
-        const [type, token] = request.headers.authorization?.split(' ') ?? [];
-
-        return type === 'Basic' ? token : undefined;
+        return true;
     }
 }
