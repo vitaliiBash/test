@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { ConfigService } from '@nestjs/config'
@@ -7,6 +7,8 @@ import { NextFunction, Request, Response } from 'express'
 import { AppModule } from './app.module'
 
 import type { AppConfigType } from './config'
+
+import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter'
 
 async function bootstrap() {
   const logger = new Logger('bootstrap')
@@ -35,6 +37,9 @@ async function bootstrap() {
     // allows the frontend to access the Authorization and Authorization-Refresh headers
     exposedHeaders: ['Authorization', 'Authorization-Refresh'],
   })
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   await app.listen(apiPort, '0.0.0.0')
 

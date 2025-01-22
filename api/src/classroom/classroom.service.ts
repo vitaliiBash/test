@@ -39,14 +39,10 @@ export class ClassroomService {
     }
 
     public async deleteClassRoom(id: number) {
-        const cr = await this.prisma.classRoom.delete({
+        await this.prisma.classRoom.delete({
             where: {
                 id,
             }
         });
-
-        if (!cr) {
-            throw new NotFoundException(`Classroom ${id} not found`);
-        }
     }
 };
