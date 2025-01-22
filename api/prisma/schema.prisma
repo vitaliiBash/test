@@ -39,6 +39,7 @@ model User {
   updatedAt DateTime  @updatedAt @db.Timestamptz()
 
   userRole  UserRole? @relation()
+  sections  Section[] @relation()
 }
 
 model ClassRoom {
@@ -51,4 +52,32 @@ model Subject {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
+}
+
+model Section {
+  id          Int               @id @default(autoincrement())
+  teacherId   String            @db.Uuid
+  subjectId   Int
+
+  teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  schedule    SectionSchedule[] @relation()
+}
+
+enum Day {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+}
+
+model SectionSchedule {
+  id            Int      @id @default(autoincrement())
+  sectionId     Int
+  classroomId   Int
+  day           Day
+  startTime     DateTime @db.Time
+  endTime       DateTime @db.Time
+
+  section       Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 }
