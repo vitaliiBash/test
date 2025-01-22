@@ -35,7 +35,7 @@ async function bootstrap() {
     origin: '*',
     credentials: true,
     // allows the frontend to access the Authorization and Authorization-Refresh headers
-    exposedHeaders: ['Authorization', 'Authorization-Refresh'],
+    exposedHeaders: ['Authorization', 'Authorization-Refresh', 'X-Shared-Authorization'],
   })
 
   const { httpAdapter } = app.get(HttpAdapterHost);

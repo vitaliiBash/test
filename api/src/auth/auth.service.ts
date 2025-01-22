@@ -3,6 +3,8 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 
+import { TokenPayload } from './types/auth';
+
 @Injectable()
 export class AuthService {
 
@@ -14,7 +16,7 @@ export class AuthService {
         this.secret = this.config.get('JWT_SECRET');
     }
 
-    generateToken(payload: object, expiresIn?: number) {
+    generateToken(payload: TokenPayload, expiresIn?: number) {
         const options: jwt.SignOptions = {};
 
         if (expiresIn) {
@@ -22,5 +24,9 @@ export class AuthService {
         }
 
         return jwt.sign(payload, this.secret, options);
+    }
+
+    veifyToken(token: string) {
+        return jwt.verify(token, this.secret);
     }
 }
