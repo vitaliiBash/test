@@ -1,6 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards, Req } from '@nestjs/common'
-
-import { Request } from 'express';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
 
 import { Serialize } from 'src/interceptors/serialize.interceptor'
 
@@ -18,6 +16,8 @@ import { Shared } from 'src/common/decorators/shared.decorator'
 
 import { Roles } from 'src/types/enum/roles'
 import { TokenType } from 'src/auth/types/enum'
+import { Invitation } from 'src/common/decorators/invitation-param.decorator';
+import { InvitationPayloadDto } from 'src/auth/dto/auth.dto';
 
 @Controller({
   version: '1',
@@ -47,9 +47,10 @@ export class UserController {
   @Post('register')
   @Public()
   @Shared(TokenType.INVITATION)
-  async register(@Req() req: Request, @Body() body: RegisterByTokenDto) {
-    const sharedTokenPayload = req.sharedTokenPayload;
+  @Serialize(UserDto)
+  async register(@Invitation() invite: InvitationPayloadDto, @Body() body: RegisterByTokenDto) {
+    const data = await this.userService.registerUser(body.email, body.password, invite.role);
 
-    const data = await this.userService.registerUser(body.email, body.password, sharedTokenPayload.role)
+    return { data };
   }
 }

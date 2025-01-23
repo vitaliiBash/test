@@ -48,6 +48,9 @@ export class UserService {
             role
           },
         }
+      },
+      include: {
+        userRole: true
       }
     });
 

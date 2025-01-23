@@ -22,6 +22,10 @@ export class SharedGuard implements CanActivate {
         const request = context.switchToHttp().getRequest<Request>();
         const type = this.reflector.get<TokenType>(Shared, context.getHandler());
 
+        if (!type) {
+            return true;
+        }
+
         const token = this.extractTokenFromHeader(request);
 
         if (!token) {
@@ -32,7 +36,7 @@ export class SharedGuard implements CanActivate {
             const payload = this.auth.veifyToken(token) as InvitationTokenPayload;
             const payloadType = payload.type;
 
-            if (type && type !== payloadType) {
+            if (type !== payloadType) {
                 throw new UnauthorizedException('Invalid token');
             }
 
@@ -45,7 +49,7 @@ export class SharedGuard implements CanActivate {
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {
-        const [type, token] = request.headers['x-shared-authorization'].split(' ') ?? [];
+        const [type, token] = request?.headers?.['x-shared-authorization']?.split(' ') ?? [];
 
         return type === 'Bearer' ? token : undefined;
     }
