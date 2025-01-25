@@ -43,9 +43,11 @@ model User {
 }
 
 model ClassRoom {
-  id      Int     @id @default(autoincrement())
+  id      Int                @id @default(autoincrement())
   name    String
   address String?
+
+  schedule SectionSchedule[] @relation()
 }
 
 model Subject {
@@ -57,13 +59,13 @@ model Subject {
 }
 
 model Section {
-  id          Int               @id @default(autoincrement())
-  teacherId   String            @db.Uuid
+  id          Int                 @id @default(autoincrement())
+  teacherId   String              @db.Uuid
   subjectId   Int
 
-  teacher     User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  subject     Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  schedule    SectionSchedule[] @relation()
+  teacher     User                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject     Subject             @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  schedule    SectionSchedule[]   @relation()
 
   @@unique([teacherId, subjectId])
 }
@@ -77,12 +79,16 @@ enum Day {
 }
 
 model SectionSchedule {
-  id            Int      @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   sectionId     Int
-  classroomId   Int
+  classroomId   Int?
   day           Day
-  startTime     DateTime @db.Time
-  endTime       DateTime @db.Time
+  startTime     DateTime   @db.Time
+  endTime       DateTime   @db.Time
 
-  section       Section? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  classroom     ClassRoom? @relation(fields: [classroomId], references: [id], onDelete: SetNull)
+  section       Section?   @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  // Read-only column to manage date range operations
+  timeRange     Unsupported("tsrange")?
 }

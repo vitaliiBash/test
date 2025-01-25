@@ -3,7 +3,7 @@ import { Controller, Post, Get, Body, Query, Param, UseGuards, Delete } from '@n
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 
 import { SectionService } from './section.service';
-import { CreateSectionDto, FilterSectionsDto, SectionDto } from './dto/section.dto';
+import { CreateSectionDto, FilterSectionsDto, ScheduleSectionDto, SectionDto, SectionScheduledDto } from './dto/section.dto';
 
 import { RolesGuard } from 'src/common/guards/roles.quard';
 import { AllowedRoles } from 'src/common/decorators/roles.decorator';
@@ -50,6 +50,21 @@ export class SectionController {
     @Serialize(SectionDto)
     async deleteSection(@Param('id') id: string) {
         await this.sectionService.deleteSection(Number(id));
+    }
+
+    @Post(':id/schedule')
+    @AllowedRoles([Roles.admin, Roles.teacher])
+    @Serialize(SectionScheduledDto)
+    async schedule(@Param('id') id: string, @Body() body: ScheduleSectionDto) {
+        const data = await this.sectionService.schedule(Number(id), body.classroomId, body.day, body.startHour, body.startMinute, body.duration);
+
+        return { data };
+    }
+
+    @Delete('schedule/:id')
+    @AllowedRoles([Roles.admin, Roles.teacher])
+    async removeSchedule(@Param('id') id: string) {
+        await this.sectionService.removeSchedule(Number(id));
     }
 
 }
