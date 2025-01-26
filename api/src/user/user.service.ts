@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 
+import { SectionService } from '../section/section.service';
 import { PrismaService } from 'src/prisma/prisma.service'
 import { FilterUserDto } from './dto/user.dto'
 import { CreateInvitationDto } from './dto/invite.dto'
@@ -7,10 +8,12 @@ import { AuthService } from 'src/auth/auth.service'
 
 import { Roles } from 'src/types/enum/roles'
 import { TokenType } from 'src/auth/types/enum'
+import { FilterSectionScheduleDto } from 'src/section/dto/section.dto';
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly sectionService: SectionService,
     private readonly prisma: PrismaService,
     private readonly auth: AuthService
   ) {}
@@ -55,6 +58,26 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async getSchedule(userId: string, filters: FilterSectionScheduleDto) {
+    const { role } = await this.prisma.userRole.findFirst({
+      select: {
+        role: true
+      },
+      where: {
+        userId
+      }
+    });
+
+    switch(role) {
+    case Roles.teacher:
+      return this.sectionService.getTeacherSchedule(userId, filters.sectionId);
+    case Roles.student:
+      return this.sectionService.getStudentSchedule(userId, filters.sectionId);
+    default:
+        throw new BadRequestException(`Unexpected user role ${role}`);
+    }
   }
 
 }

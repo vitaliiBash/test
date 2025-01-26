@@ -6,6 +6,15 @@ import { TimeConstraintsValidator } from 'src/common/validators/section-time.val
 
 import { Day } from 'src/types/enum/days';
 
+export class FilterSectionScheduleDto {
+
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  sectionId?: number;
+
+}
+
 @TimeConstraintsValidator<ScheduleSectionDto>()
 export class ScheduleSectionDto {
   @IsInt()

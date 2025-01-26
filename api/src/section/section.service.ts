@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import * as moment from 'moment';
 
@@ -7,6 +7,7 @@ import { CreateSectionDto, FilterSectionsDto } from './dto/section.dto';
 
 import { Day } from 'src/types/enum/days';
 import { Roles } from 'src/types/enum/roles';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class SectionService {
@@ -98,6 +99,72 @@ export class SectionService {
         });
     }
 
+    async enroll(user: User, sectionId: number) {
+        const hasOverlap = this.hasOverlappedByStudent(user.id, sectionId);
+
+        if (hasOverlap) {
+            throw new ConflictException(`Enrolled sections have overlapping schedules. user ${user.id}`);
+        }
+
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            enrolled: {
+              connect: {
+                id: sectionId
+              }
+            }
+          }
+        })
+      }
+
+      async unenroll(user: User, sectionId: number) {
+        await this.prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            enrolled: {
+              disconnect: {
+                id: sectionId
+              }
+            }
+          }
+        })
+      }
+
+    async getTeacherSchedule(teacherId: string, sectionId?: number) {
+        const schedule = await this.prisma.sectionSchedule.findMany({
+            where: {
+                section: {
+                    id: sectionId,
+                    teacherId,
+                }
+            }
+        });
+
+        return schedule;
+    }
+
+    async getStudentSchedule(studentId: string, sectionId?: number) {
+        const schedules = await this.prisma.sectionSchedule.findMany({
+            where: {
+                section: {
+                    id: sectionId,
+                    students: {
+                        some: {
+                            id: studentId,
+                        }
+                    },
+                }
+            },
+        });
+
+        return schedules;
+    }
+
     private async hasOverlapSectionsByClassroom(classroomId: number, day: Day, startTime: moment.Moment, endTime: moment.Moment) {
         const res: Array<{ exist: 1 }> = await this.prisma.$queryRaw`
             select 1 exist
@@ -109,6 +176,22 @@ export class SectionService {
             limit 1
         `;
 
-        return Boolean(res[0]);
+        return Boolean(res.length);
+    }
+
+    private async hasOverlappedByStudent(studentId, sectionId) {
+        const res: Array<{ exist: 1 }> = await this.prisma.$queryRaw`
+            select *
+            from "SectionSchedule" ss_new
+            join "_StudentsRelation" enroll
+                on enroll."B" = ${studentId}
+            join "SectionSchedule" ss_ex
+                on ss_ex."sectionId" = enroll."A"
+                and ss_new."timeRange" && ss_ex."timeRange"
+                and ss_new.day = ss_ex.day
+            where ss_new."sectionId" = ${sectionId}
+        `;
+
+        return Boolean(res.length);
     }
 }
