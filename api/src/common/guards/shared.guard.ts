@@ -2,9 +2,9 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 
 import { Request } from 'express';
-import { AuthService } from 'src/auth/auth.service';
-import { InvitationTokenPayload } from 'src/auth/types/auth';
-import { TokenType } from 'src/auth/types/enum';
+import { AuthService } from 'src/modules/auth/auth.service';
+import { InvitationTokenPayload } from 'src/modules/auth/types/auth';
+import { TokenType } from 'src/modules/auth/types/enum';
 
 import { Shared } from 'src/common/decorators/shared.decorator';
 

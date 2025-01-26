@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 
 import { Request } from 'express';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public-auth.decorator';
 
 @Injectable()

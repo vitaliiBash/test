@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { IncomingMessage } from "http";
-import { InvitationTokenPayload } from "src/auth/types/auth";
+import { InvitationTokenPayload } from "src/modules/auth/types/auth";
 
 declare global {
     namespace Express {

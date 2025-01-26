@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 
 import * as moment from 'moment';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateSectionDto, FilterSectionsDto } from './dto/section.dto';
 
 import { Day } from 'src/types/enum/days';

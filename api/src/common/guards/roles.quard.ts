@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 
 import { Request } from 'express';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 import { AllowedRoles } from 'src/common/decorators/roles.decorator'
 

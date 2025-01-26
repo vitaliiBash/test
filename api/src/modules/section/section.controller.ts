@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Query, Param, UseGuards, Delete } from '@nestjs/common';
 
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 
 import { SectionService } from './section.service';
 import { CreateSectionDto, FilterSectionsDto, ScheduleSectionDto, SectionDto, SectionScheduledDto } from './dto/section.dto';

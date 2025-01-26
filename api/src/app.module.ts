@@ -7,11 +7,11 @@ import config from './config'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
-import { UserModule } from './user/user.module'
-import { ClassroomModule } from './classroom/classroom.module'
-import { SubjectModule } from './subject/subject.module'
-import { SectionModule } from './section/section.module'
-import { PrismaModule } from './prisma/prisma.module'
+import { UserModule } from './modules/user/user.module'
+import { ClassroomModule } from './modules/classroom/classroom.module'
+import { SubjectModule } from './modules/subject/subject.module'
+import { SectionModule } from './modules/section/section.module'
+import { PrismaModule } from './modules/prisma/prisma.module'
 
 import { AuthGuard } from './common/guards/auth.guard'
 

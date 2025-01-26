@@ -6,7 +6,7 @@ import { RolesGuard } from 'src/common/guards/roles.quard';
 import { AllowedRoles } from 'src/common/decorators/roles.decorator';
 
 import { Roles } from 'src/types/enum/roles';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
 
 import { CreateSubjectDto, SubjectDto } from './dto/subject.dto';
 

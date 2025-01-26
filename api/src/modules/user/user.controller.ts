@@ -1,13 +1,13 @@
 import { Body, Controller, Param, Get, Post, Query, UseGuards } from '@nestjs/common'
 
-import { Serialize } from 'src/interceptors/serialize.interceptor'
+import { Serialize } from 'src/common/interceptors/serialize.interceptor'
 
 import { UserService } from './user.service'
 import { SectionService } from '../section/section.service';
 import { FilterUserDto, UserDto } from './dto/user.dto'
-import { InvitationPayloadDto } from 'src/auth/dto/auth.dto';
+import { InvitationPayloadDto } from 'src/modules/auth/dto/auth.dto';
 import { CreateInvitationDto, InviteDto, RegisterByTokenDto } from './dto/invite.dto'
-import { FilterSectionScheduleDto, SectionScheduledDto } from 'src/section/dto/section.dto'
+import { FilterSectionScheduleDto, SectionScheduledDto } from 'src/modules/section/dto/section.dto'
 
 import { RolesGuard } from 'src/common/guards/roles.quard'
 import { SharedGuard } from 'src/common/guards/shared.guard'
@@ -20,7 +20,7 @@ import { ReqUser } from 'src/common/decorators/user.decorator'
 
 import { User } from '@prisma/client'
 import { Roles } from 'src/types/enum/roles'
-import { TokenType } from 'src/auth/types/enum'
+import { TokenType } from 'src/modules/auth/types/enum'
 
 @Controller({
   version: '1',

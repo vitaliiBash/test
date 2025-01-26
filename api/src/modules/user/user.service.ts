@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 
 import { SectionService } from '../section/section.service';
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from 'src/modules/prisma/prisma.service'
 import { FilterUserDto } from './dto/user.dto'
 import { CreateInvitationDto } from './dto/invite.dto'
-import { AuthService } from 'src/auth/auth.service'
+import { AuthService } from 'src/modules/auth/auth.service'
 
 import { Roles } from 'src/types/enum/roles'
-import { TokenType } from 'src/auth/types/enum'
-import { FilterSectionScheduleDto } from 'src/section/dto/section.dto';
+import { TokenType } from 'src/modules/auth/types/enum'
+import { FilterSectionScheduleDto } from 'src/modules/section/dto/section.dto';
 
 @Injectable()
 export class UserService {

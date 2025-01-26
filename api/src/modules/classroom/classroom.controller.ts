@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Body, UseGuards, Param } from '@nestjs/common'
 
-import { Serialize } from 'src/interceptors/serialize.interceptor'
+import { Serialize } from 'src/common/interceptors/serialize.interceptor'
 
 import { ClassroomService } from './classroom.service'
 import { ClassroomDto, CreateClassroomDto } from './dto/classroom.dto'
