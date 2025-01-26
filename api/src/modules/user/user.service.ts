@@ -1,21 +1,27 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 
+import * as _ from 'lodash';
+
 import { SectionService } from '../section/section.service';
 import { PrismaService } from 'src/modules/prisma/prisma.service'
 import { FilterUserDto } from './dto/user.dto'
 import { CreateInvitationDto } from './dto/invite.dto'
 import { AuthService } from 'src/modules/auth/auth.service'
 
+import { PdfHelper } from 'src/common/helpers/pdf.helper';
+
 import { Roles } from 'src/types/enum/roles'
 import { TokenType } from 'src/modules/auth/types/enum'
 import { FilterSectionScheduleDto } from 'src/modules/section/dto/section.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly sectionService: SectionService,
     private readonly prisma: PrismaService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly pdf: PdfHelper,
   ) {}
 
   async getUsers(filter: FilterUserDto) {
@@ -78,6 +84,48 @@ export class UserService {
     default:
         throw new BadRequestException(`Unexpected user role ${role}`);
     }
+  }
+
+  async exportSchedule(user: User) {
+    const sections = await this.prisma.section.findMany({
+      where: {
+        students: {
+          some: {
+            id: user.id,
+          }
+        }
+      },
+      include: {
+        schedule: {
+          include: {
+            classroom: true,
+          }
+        },
+        teacher: true,
+        subject: true
+      }
+    });
+
+    const lessons = sections.map(section => {
+      const { teacher, subject, schedule } = section;
+
+      const lessons = schedule
+        .map(({ classroom, ...sch}) => {
+          return {
+            teacher: teacher.email,
+            subject: subject.name,
+            startTime: sch.startTime,
+            endTime: sch.endTime,
+            day: sch.day,
+            classroom: classroom.name,
+          }
+        });
+
+        return lessons;
+      })
+      .flat();
+
+    return this.pdf.generatePdf(user, lessons);
   }
 
 }

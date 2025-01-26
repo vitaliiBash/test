@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Get, Post, Query, UseGuards } from '@nestjs/common'
+import { Body, Controller, Param, Get, Post, Query, UseGuards, StreamableFile } from '@nestjs/common'
 
 import { Serialize } from 'src/common/interceptors/serialize.interceptor'
 
@@ -78,5 +78,12 @@ export class UserController {
     const data = await this.userService.getSchedule(user.id, filter);
 
     return { data };
+  }
+
+  @Post('me/schedule/export')
+  async exportSchedule(@ReqUser() user: User) {
+    const stream = await this.userService.exportSchedule(user);
+
+    return new StreamableFile(stream);
   }
 }

@@ -7,9 +7,11 @@ import { SectionModule } from 'src/modules/section/section.module'
 import { UserService } from './user.service'
 import { UserController } from './user.controller'
 
+import { PdfHelper } from 'src/common/helpers/pdf.helper'
+
 @Module({
   imports: [PrismaModule, AuthModule, SectionModule],
-  providers: [UserService],
+  providers: [UserService, PdfHelper],
   controllers: [UserController],
   exports: [UserService],
 })
