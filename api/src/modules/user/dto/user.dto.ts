@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 import { Expose, Transform } from 'class-transformer'
 import { Roles } from '@prisma/client'
 
@@ -17,5 +17,5 @@ export class UserDto {
 
   @Expose()
   @Transform(({ obj }) => obj.userRole?.role, { toClassOnly: true })
-  role: Roles;
+  role: Roles
 }

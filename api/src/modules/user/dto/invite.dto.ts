@@ -4,20 +4,19 @@ import { Roles } from '@prisma/client'
 
 export class CreateInvitationDto {
   @IsEnum(Roles)
-  role: Roles;
+  role: Roles
 }
 
 export class RegisterByTokenDto {
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string
 
-    @MinLength(6)
-    @MaxLength(24)
-    password: string;
+  @MinLength(6)
+  @MaxLength(24)
+  password: string
 }
 
 export class InviteDto {
-    @Expose()
-    token: string;
+  @Expose()
+  token: string
 }
-

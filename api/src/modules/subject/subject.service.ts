@@ -1,44 +1,42 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "src/modules/prisma/prisma.service";
-import { CreateSubjectDto } from "./dto/subject.dto";
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { PrismaService } from 'src/modules/prisma/prisma.service'
+import { CreateSubjectDto } from './dto/subject.dto'
 
 @Injectable()
 export class SubjectService {
-    constructor(
-        private readonly prisma: PrismaService
-    ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-    async createSubject(params: CreateSubjectDto) {
-        const subject = await this.prisma.subject.create({
-            data: params
-        });
+  async createSubject(params: CreateSubjectDto) {
+    const subject = await this.prisma.subject.create({
+      data: params,
+    })
 
-        return subject;
+    return subject
+  }
+
+  async getSubjects() {
+    return this.prisma.subject.findMany()
+  }
+
+  async getSubject(id: number) {
+    const subject = await this.prisma.subject.findFirst({
+      where: {
+        id,
+      },
+    })
+
+    if (!subject) {
+      throw new NotFoundException(`Subject ${id} not found`)
     }
 
-    async getSubjects() {
-        return this.prisma.subject.findMany();
-    }
+    return subject
+  }
 
-    async getSubject(id: number) {
-        const subject = await this.prisma.subject.findFirst({
-            where: {
-                id
-            }
-        });
-
-        if (!subject) {
-            throw new NotFoundException(`Subject ${id} not found`);
-        }
-
-        return subject;
-    }
-
-    async deleteSubject(id: number) {
-        await this.prisma.subject.delete({
-            where: {
-                id
-            }
-        });
-    }
+  async deleteSubject(id: number) {
+    await this.prisma.subject.delete({
+      where: {
+        id,
+      },
+    })
+  }
 }

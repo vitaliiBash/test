@@ -1,1 +1,1 @@
-export { Day } from '@prisma/client';
+export { Day } from '@prisma/client'

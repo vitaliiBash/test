@@ -8,7 +8,10 @@ import { AppModule } from './app.module'
 
 import type { AppConfigType } from './config'
 
-import { PrismaClientExceptionFilter, PrismaClientUnknowExceptionFilter } from './common/filters/prisma-client-exception.filter'
+import {
+  PrismaClientExceptionFilter,
+  PrismaClientUnknowExceptionFilter,
+} from './common/filters/prisma-client-exception.filter'
 
 async function bootstrap() {
   const logger = new Logger('bootstrap')
@@ -38,9 +41,9 @@ async function bootstrap() {
     exposedHeaders: ['Authorization', 'Authorization-Refresh', 'X-Shared-Authorization'],
   })
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
-  app.useGlobalFilters(new PrismaClientUnknowExceptionFilter(httpAdapter));
+  const { httpAdapter } = app.get(HttpAdapterHost)
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
+  app.useGlobalFilters(new PrismaClientUnknowExceptionFilter(httpAdapter))
 
   await app.listen(apiPort, '0.0.0.0')
 

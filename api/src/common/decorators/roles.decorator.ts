@@ -1,4 +1,4 @@
-import { Reflector } from '@nestjs/core';
-import PrismClient from '@prisma/client';
+import { Reflector } from '@nestjs/core'
+import PrismClient from '@prisma/client'
 
-export const AllowedRoles = Reflector.createDecorator<PrismClient.Roles[]>();
+export const AllowedRoles = Reflector.createDecorator<PrismClient.Roles[]>()

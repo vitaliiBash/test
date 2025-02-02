@@ -2,21 +2,21 @@ import { IsOptional, IsString } from 'class-validator'
 import { Expose } from 'class-transformer'
 
 export class CreateClassroomDto {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string
 
-    @IsOptional()
-    @IsString()
-    address?: string;
-};
+  @IsOptional()
+  @IsString()
+  address?: string
+}
 
 export class ClassroomDto {
-    @Expose()
-    id: number;
+  @Expose()
+  id: number
 
-    @Expose()
-    name: string;
+  @Expose()
+  name: string
 
-    @Expose()
-    address?: string;
+  @Expose()
+  address?: string
 }

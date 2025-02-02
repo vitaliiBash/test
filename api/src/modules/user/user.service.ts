@@ -1,19 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 
-import * as _ from 'lodash';
-
-import { SectionService } from '../section/section.service';
+import { SectionService } from '../section/section.service'
 import { PrismaService } from 'src/modules/prisma/prisma.service'
 import { FilterUserDto } from './dto/user.dto'
 import { CreateInvitationDto } from './dto/invite.dto'
 import { AuthService } from 'src/modules/auth/auth.service'
 
-import { PdfHelper } from 'src/common/helpers/pdf.helper';
+import { PdfHelper } from 'src/common/helpers/pdf.helper'
 
 import { Roles } from 'src/types/enum/roles'
 import { TokenType } from 'src/modules/auth/types/enum'
-import { FilterSectionScheduleDto } from 'src/modules/section/dto/section.dto';
-import { User } from '@prisma/client';
+import { FilterSectionScheduleDto } from 'src/modules/section/dto/section.dto'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class UserService {
@@ -32,19 +30,19 @@ export class UserService {
       include: {
         userRole: {
           select: {
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     })
 
     return users
   }
 
   async createInvitationToken(params: CreateInvitationDto) {
-    const token = this.auth.generateToken({ type: TokenType.INVITATION, role: params.role });
+    const token = this.auth.generateToken({ type: TokenType.INVITATION, role: params.role })
 
-    return { token };
+    return { token }
   }
 
   async registerUser(email: string, password: string, role: Roles) {
@@ -54,35 +52,35 @@ export class UserService {
         password,
         userRole: {
           create: {
-            role
+            role,
           },
-        }
+        },
       },
       include: {
-        userRole: true
-      }
-    });
+        userRole: true,
+      },
+    })
 
-    return user;
+    return user
   }
 
   async getSchedule(userId: string, filters: FilterSectionScheduleDto) {
     const { role } = await this.prisma.userRole.findFirst({
       select: {
-        role: true
+        role: true,
       },
       where: {
-        userId
-      }
-    });
+        userId,
+      },
+    })
 
-    switch(role) {
-    case Roles.teacher:
-      return this.sectionService.getTeacherSchedule(userId, filters.sectionId);
-    case Roles.student:
-      return this.sectionService.getStudentSchedule(userId, filters.sectionId);
-    default:
-        throw new BadRequestException(`Unexpected user role ${role}`);
+    switch (role) {
+      case Roles.teacher:
+        return this.sectionService.getTeacherSchedule(userId, filters.sectionId)
+      case Roles.student:
+        return this.sectionService.getStudentSchedule(userId, filters.sectionId)
+      default:
+        throw new BadRequestException(`Unexpected user role ${role}`)
     }
   }
 
@@ -92,25 +90,25 @@ export class UserService {
         students: {
           some: {
             id: user.id,
-          }
-        }
+          },
+        },
       },
       include: {
         schedule: {
           include: {
             classroom: true,
-          }
+          },
         },
         teacher: true,
-        subject: true
-      }
-    });
+        subject: true,
+      },
+    })
 
-    const lessons = sections.map(section => {
-      const { teacher, subject, schedule } = section;
+    const lessons = sections
+      .map(section => {
+        const { teacher, subject, schedule } = section
 
-      const lessons = schedule
-        .map(({ classroom, ...sch}) => {
+        const lessons = schedule.map(({ classroom, ...sch }) => {
           return {
             teacher: teacher.email,
             subject: subject.name,
@@ -119,13 +117,12 @@ export class UserService {
             day: sch.day,
             classroom: classroom.name,
           }
-        });
+        })
 
-        return lessons;
+        return lessons
       })
-      .flat();
+      .flat()
 
-    return this.pdf.generatePdf(user, lessons);
+    return this.pdf.generatePdf(user, lessons)
   }
-
 }

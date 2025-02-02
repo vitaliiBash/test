@@ -1,40 +1,38 @@
-import { IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
-import { Expose, Transform } from 'class-transformer';
-import * as moment from 'moment';
+import { IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator'
+import { Expose, Transform } from 'class-transformer'
+import * as moment from 'moment'
 
-import { TimeConstraintsValidator } from 'src/common/validators/section-time.validator';
+import { TimeConstraintsValidator } from 'src/common/validators/section-time.validator'
 
-import { Day } from 'src/types/enum/days';
+import { Day } from 'src/types/enum/days'
 
 export class FilterSectionScheduleDto {
-
   @IsOptional()
   @Transform(({ value }) => Number(value))
   @IsNumber()
-  sectionId?: number;
-
+  sectionId?: number
 }
 
 @TimeConstraintsValidator<ScheduleSectionDto>()
 export class ScheduleSectionDto {
   @IsInt()
-  classroomId: number;
+  classroomId: number
 
   @IsEnum(Day)
-  day: Day;
+  day: Day
 
   @IsInt()
   @Min(7)
   @Max(21)
-  startHour: number;
+  startHour: number
 
   @IsInt()
   @Min(0)
   @Max(59)
-  startMinute: number;
+  startMinute: number
 
   @IsIn([50, 80])
-  duration: number;
+  duration: number
 }
 
 export class FilterSectionsDto {
@@ -48,13 +46,12 @@ export class FilterSectionsDto {
 }
 
 export class CreateSectionDto {
-    @IsString()
-    teacherId: string;
+  @IsString()
+  teacherId: string
 
-    @IsNumber()
-    subjectId: number;
+  @IsNumber()
+  subjectId: number
 }
-
 
 export class SectionScheduledDto {
   @Expose()

@@ -33,8 +33,8 @@ import { AuthGuard } from './common/guards/auth.guard'
     AppService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard
-    }
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

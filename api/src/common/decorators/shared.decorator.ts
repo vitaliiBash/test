@@ -1,4 +1,4 @@
-import { Reflector } from '@nestjs/core';
-import { TokenType } from 'src/modules/auth/types/enum';
+import { Reflector } from '@nestjs/core'
+import { TokenType } from 'src/modules/auth/types/enum'
 
-export const Shared = Reflector.createDecorator<TokenType>();
+export const Shared = Reflector.createDecorator<TokenType>()
